@@ -27,6 +27,8 @@ FROM hashicorp/terraform:latest
 # helm
 COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
 RUN chmod +x /usr/local/bin/helm
+RUN helm repo add stable https://kubernetes-charts.storage.googleapis.com/ && \
+    helm repo update;
 
 # kubectl
 COPY --from=builder /usr/local/bin/kubectl /usr/local/bin/kubectl
