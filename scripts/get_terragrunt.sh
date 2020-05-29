@@ -1,7 +1,7 @@
 #!/bin/sh -x
 
 # Install required tools
-apk add --no-cache wget jq
+apk add --no-cache curl wget jq
 
 # Determine install version
 TERRAGRUNT_RELEASE_LATEST=$(curl -sL https://api.github.com/repos/gruntwork-io/terragrunt/releases/latest | jq -r .tag_name)
