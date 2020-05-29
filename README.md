@@ -13,11 +13,6 @@ Run these commands from the same folder as this readme. Tweak the Dockerfile to 
 ```bash
 docker build --pull --rm -t lapis-lazuli .
 
-# Build w/ the latest terragrunt (requires curl & jq)
-docker build --pull --rm \
---build-arg TERRAGRUNT_RELEASE=$(curl -sL https://api.github.com/repos/gruntwork-io/terragrunt/releases/latest | jq -r .tag_name) \
--t lapis-lazuli .
-
 ```
 
 ## Using The Tool Suite From Docker
