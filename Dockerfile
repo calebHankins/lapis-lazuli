@@ -1,10 +1,12 @@
+# Build Stage
+FROM alpine:latest AS builder
 
-FROM hashicorp/terraform:latest
+# Install packages needed to fetch tools
+RUN apk add --no-cache bash curl tar openssl jq
 
 # Install helm
 ADD https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 /usr/local/bin/get_helm.sh
 RUN chmod 700 /usr/local/bin/get_helm.sh
-RUN apk add --no-cache bash curl tar openssl
 RUN ./usr/local/bin/get_helm.sh
 
 # Install kubectl (aws vended)
@@ -19,3 +21,17 @@ RUN echo "Pulling terragrunt version: ${TERRAGRUNT_RELEASE}"
 ADD https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_RELEASE}/terragrunt_linux_amd64 /usr/local/bin/terragrunt
 RUN chmod +x /usr/local/bin/terragrunt
 
+# Final Stage
+FROM hashicorp/terraform:latest
+
+# helm
+COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
+RUN chmod +x /usr/local/bin/helm
+
+# kubectl
+COPY --from=builder /usr/local/bin/kubectl /usr/local/bin/kubectl
+RUN chmod +x /usr/local/bin/kubectl
+
+# terragrunt
+COPY --from=builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
+RUN chmod +x /usr/local/bin/terragrunt
