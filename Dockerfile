@@ -2,7 +2,7 @@
 FROM alpine:latest AS builder
 
 # Install packages needed to fetch tools
-RUN apk add --no-cache bash curl tar openssl jq
+RUN apk add --no-cache bash curl wget tar openssl jq
 
 # Install helm
 ADD https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 /usr/local/bin/get_helm.sh
