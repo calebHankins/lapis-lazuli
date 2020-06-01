@@ -4,23 +4,28 @@ FROM alpine:latest AS builder
 # Install packages needed to fetch tools
 RUN apk add --no-cache bash curl wget tar openssl jq unzip
 
-# Install helm
+# helm
 ADD https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 /usr/local/bin/get_helm.sh
 RUN chmod +x /usr/local/bin/get_helm.sh
 RUN ./usr/local/bin/get_helm.sh
 
-# Install kubectl (aws vended)
+# kubectl (aws vended)
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 RUN curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl
 RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin/kubectl
 
-# Install EKS-vended aws-iam-authenticator
+# eksctl
+# https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
+RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+RUN mv /tmp/eksctl /usr/local/bin
+
+# EKS-vended aws-iam-authenticator
 RUN curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator
 RUN chmod +x ./aws-iam-authenticator
 RUN mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
 
-# Install terragrunt
+# terragrunt
 ARG TERRAGRUNT_RELEASE=
 COPY ./scripts/get_terragrunt.sh /usr/local/bin/get_terragrunt.sh
 RUN chmod +x /usr/local/bin/get_terragrunt.sh
@@ -38,6 +43,10 @@ RUN helm repo add stable https://kubernetes-charts.storage.googleapis.com/ && \
 # kubectl
 COPY --from=builder /usr/local/bin/kubectl /usr/local/bin/kubectl
 RUN chmod +x /usr/local/bin/kubectl
+
+# eksctl
+COPY --from=builder /usr/local/bin/eksctl /usr/local/bin/eksctl
+RUN chmod +x /usr/local/bin/eksctl
 
 # aws-iam-authenticator
 COPY --from=builder /usr/local/bin/aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
