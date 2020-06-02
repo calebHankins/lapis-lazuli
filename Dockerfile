@@ -31,6 +31,11 @@ COPY ./scripts/get_terragrunt.sh /usr/local/bin/get_terragrunt.sh
 RUN chmod +x /usr/local/bin/get_terragrunt.sh
 RUN ./usr/local/bin/get_terragrunt.sh
 
+# hclq (jq for hcl)
+# https://hclq.sh/
+RUN curl -sSLo install.sh https://install.hclq.sh
+RUN sh install.sh
+
 ## Final Stage
 FROM hashicorp/terraform:latest
 
@@ -55,6 +60,10 @@ RUN chmod +x /usr/local/bin/aws-iam-authenticator
 # terragrunt
 COPY --from=builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
 RUN chmod +x /usr/local/bin/terragrunt
+
+# hclq (jq for hcl)
+COPY --from=builder /usr/local/bin/hclq /usr/local/bin/hclq
+RUN chmod +x /usr/local/bin/hclq
 
 # aws-cli 2 (also needs glibc on alpine)
 # https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
