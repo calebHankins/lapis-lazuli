@@ -2,7 +2,19 @@
 FROM alpine:latest AS builder
 
 # Install packages needed to fetch tools
-RUN apk add --no-cache bash curl wget tar openssl jq unzip
+RUN apk add --no-cache bash curl wget tar openssl jq unzip coreutils
+
+# Trust self-signed certs in the chain for schemastore.azurewebsites.net:443 for intellisense
+# Comment this out for non-corporate envs where you might have MitM attacks from IP loss prevention software like Netskope
+# @See: https://en.wikipedia.org/wiki/Netskope
+# If you need this kind of mitigation at home on personal hardware, someone might be doing a legit MitM attack against you
+# @see: https://en.wikipedia.org/wiki/Man-in-the-middle_attack
+# Alpine version
+RUN openssl s_client -showcerts  -connect schemastore.azurewebsites.net:443 2>&1 < /dev/null |\
+  sed -n '/-----BEGIN/,/-----END/p' |\
+  csplit - -z -b %02d.crt -f /usr/local/share/ca-certificates/schemastore.azurewebsites.net. '/-----BEGIN CERTIFICATE-----/' '{*}' \
+  && chmod 644 /usr/local/share/ca-certificates/*.crt \
+  && update-ca-certificates
 
 # helm
 ADD https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 /usr/local/bin/get_helm.sh
@@ -38,6 +50,10 @@ RUN sh install.sh
 
 ## Final Stage
 FROM hashicorp/terraform:latest
+
+# Copy over certs from build stage
+COPY --from=builder /usr/local/share/ca-certificates /usr/local/share/ca-certificates
+RUN update-ca-certificates
 
 # helm
 COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
