@@ -64,5 +64,5 @@ docker run --rm -it \
 --workdir /workspace \
 --entrypoint terragrunt \
 lapis-lazuli \
-plan -out unica_tf -var-file='/root/terragrunt_envs/sampleEnv.tfvars'
+plan -out ./plans/sampleEnv_tf -var-file='/root/terragrunt_envs/sampleEnv.tfvars'
 ```
