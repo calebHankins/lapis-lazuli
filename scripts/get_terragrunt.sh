@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 # Determine install version
 TERRAGRUNT_RELEASE_LATEST=$(curl -sL https://api.github.com/repos/gruntwork-io/terragrunt/releases/latest | jq -r .tag_name)
