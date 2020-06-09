@@ -18,12 +18,12 @@ docker build --pull --rm -t lapis-lazuli .
 ## Using The Tool Suite From Docker
 
 ```bash
-# Bypass default entrypoint and explore w/ ash
-docker run --rm --entrypoint ash -it lapis-lazuli
+# Explore w/ ash
+docker run --rm -it lapis-lazuli
 # / # terragrunt --version
 # terragrunt version v0.23.23
 
-# Execute default entrypoint (terraform)
-docker run --rm -it lapis-lazuli plan main.tf
+# Execute a specific tool (terraform)
+docker run --rm -it lapis-lazuli -c terraform plan main.tf
 
 ```

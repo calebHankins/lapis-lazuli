@@ -113,3 +113,6 @@ RUN apk --no-cache add \
 
 # QoL Tooling
 RUN apk add --no-cache groff jq
+
+# Entrypoint override, setting to shell since this thing has turned into more of a tool grab bag
+ENTRYPOINT [ "ash" ]
