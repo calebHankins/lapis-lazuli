@@ -52,9 +52,10 @@ RUN sh install.sh
 ## Final Stage
 FROM hashicorp/terraform:latest
 
-# Copy over certs from build stage
+# Copy over certs from build stage and trust for the tools
 COPY --from=builder /usr/local/share/ca-certificates /usr/local/share/ca-certificates
 RUN update-ca-certificates
+ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 # helm
 COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
