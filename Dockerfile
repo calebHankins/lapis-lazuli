@@ -2,7 +2,7 @@
 FROM alpine:latest AS builder
 
 # Install packages needed to fetch tools
-RUN apk add --no-cache bash curl wget tar openssl jq unzip coreutils
+RUN apk add --no-cache bash curl wget tar openssl jq unzip coreutils dos2unix
 
 # Trust self-signed certs in the chain for schemastore.azurewebsites.net:443 for intellisense
 # Comment this out for non-corporate envs where you might have MitM attacks from IP loss prevention software like Netskope
@@ -40,8 +40,9 @@ RUN mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
 # terragrunt
 ARG TERRAGRUNT_RELEASE=
 COPY ./scripts/get_terragrunt.sh /usr/local/bin/get_terragrunt.sh
-RUN chmod +x /usr/local/bin/get_terragrunt.sh
-RUN ./usr/local/bin/get_terragrunt.sh
+RUN dos2unix /usr/local/bin/get_terragrunt.sh \
+    && chmod +x /usr/local/bin/get_terragrunt.sh \
+    && ./usr/local/bin/get_terragrunt.sh
 
 # hclq (jq for hcl)
 # https://hclq.sh/
