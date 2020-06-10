@@ -57,6 +57,9 @@ COPY --from=builder /usr/local/share/ca-certificates /usr/local/share/ca-certifi
 RUN update-ca-certificates
 ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
+# QoL Tooling
+RUN apk add --no-cache groff jq bash
+
 # helm
 COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
 RUN chmod +x /usr/local/bin/helm
@@ -112,8 +115,6 @@ RUN apk --no-cache add \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/*
 
-# QoL Tooling
-RUN apk add --no-cache groff jq
 
 # Entrypoint override, setting to shell since this thing has turned into more of a tool grab bag
-ENTRYPOINT [ "ash" ]
+ENTRYPOINT [ "bash" ]
