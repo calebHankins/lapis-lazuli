@@ -42,7 +42,7 @@ If you pulled from docker hub instead of building, you may need to run the code 
 ## Run
 
 ```bash
-# Explore w/ ash
+# Explore
 docker run --rm -it lapis-lazuli
 # / # terragrunt --version
 # terragrunt version v0.23.23
