@@ -58,7 +58,7 @@ RUN update-ca-certificates
 ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 
 # QoL Tooling
-RUN apk add --no-cache groff jq bash
+RUN apk add --no-cache groff jq bash coreutils binutils curl wget unzip tar
 
 # helm
 COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
@@ -90,8 +90,6 @@ RUN chmod +x /usr/local/bin/hclq
 # https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
 ENV GLIBC_VER=2.31-r0
 RUN apk --no-cache add \
-        binutils \
-        curl \
     && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
@@ -107,14 +105,13 @@ RUN apk --no-cache add \
         /usr/local/aws-cli/v2/*/dist/aws_completer \
         /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
         /usr/local/aws-cli/v2/*/dist/awscli/examples \
-    && apk --no-cache del \
-        binutils \
-        curl \
-        unzip \
     && rm glibc-${GLIBC_VER}.apk \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/*
 
+# Add Node.js to allow for more scripting options
+RUN wget https://nodejs.org/dist/v12.18.2/node-v12.18.2-linux-x64.tar.gz
+RUN tar --strip-components 1 -xzf node-v* -C /usr/local && rm node-*-linux-x64.tar.gz
 
 # Entrypoint override, setting to shell since this thing has turned into more of a tool grab bag
 ENTRYPOINT [ "bash" ]
