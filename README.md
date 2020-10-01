@@ -3,14 +3,12 @@
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/calebhankins/lapis-lazuli.svg?style=flat-square)](https://hub.docker.com/r/calebhankins/lapis-lazuli/)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/calebhankins/lapis-lazuli.svg?style=flat-square)](https://hub.docker.com/r/calebhankins/lapis-lazuli/)
 
-
 This project aims to provide a thin wrapping container around [cloud infrastructure](https://aws.amazon.com/what-is-cloud-computing/) and [kubernetes](https://kubernetes.io/) management tools.
 
 For [cloud infrastructure](https://aws.amazon.com/what-is-cloud-computing/), primarily focusing on enabling: [HashiCorp's Terraform](https://github.com/hashicorp/terraform), [Gruntwork.io's terragrunt](https://github.com/gruntwork-io/terragrunt), and the [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html).
 
 For [k8s](https://kubernetes.io/) support: [helm](https://helm.sh/), [kubectl](https://kubernetes.io/docs/reference/kubectl/overview/), [eksctl](https://eksctl.io/).
 
-Table of Contents
 - [lapis-lazuli](#lapis-lazuli)
   - [Build](#build)
     - [Pre-Built](#pre-built)
@@ -35,6 +33,7 @@ docker tag  calebhankins/lapis-lazuli lapis-lazuli
 ```
 
 ### A Note Concerning Self-Signed Certificates
+
 If you are in a corporate env or for some other reason have self-signed certificates in your chain, the tools will fail with SSL errors. To mitigate this, the build will ping a site over ssl and trust the certs in the chain. If you wish to not do this, comment out the 'Trust self-signed certs' code in the [Dockerfile](Dockerfile) prior to building.
 
 If you pulled from docker hub instead of building, you may need to run the code related to self-signed certs after starting your image to trust your self-signed certs.
