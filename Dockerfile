@@ -65,7 +65,7 @@ RUN apk add --no-cache \
 # helm
 COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
 RUN chmod +x /usr/local/bin/helm
-RUN helm repo add stable https://kubernetes-charts.storage.googleapis.com/ && \
+RUN helm repo add stable https://charts.helm.sh/stable && \
     helm repo update;
 
 # kubectl
