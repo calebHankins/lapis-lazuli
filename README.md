@@ -20,7 +20,15 @@ For [k8s](https://kubernetes.io/) support: [helm](https://helm.sh/), [kubectl](h
 Run these commands from the same folder as this readme. Tweak the Dockerfile to meet your needs.
 
 ```bash
+# Build w/ project defaulted tool versions
 docker build --pull --rm -t lapis-lazuli .
+```
+
+There are also hooks for specifying specific base images and tool versions, check out the [dockerfile](Dockerfile) for available [build args](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables---build-arg).
+
+```bash
+# Build for the latest released terraform version
+docker build --pull --rm --build-arg BASE_IMAGE=hashicorp/terraform:latest -t lapis-lazuli .
 ```
 
 ### Pre-Built

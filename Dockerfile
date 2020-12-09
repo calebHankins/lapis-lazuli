@@ -1,5 +1,10 @@
 ## Build Stage
-FROM alpine:latest AS builder
+ARG BUILDER_BASE_REGISTRY=docker.io
+ARG BUILDER_BASE_IMAGE=alpine:latest
+ARG BASE_REGISTRY=docker.io
+ARG BASE_IMAGE=hashicorp/terraform:0.13.5
+FROM $BUILDER_BASE_REGISTRY/$BUILDER_BASE_IMAGE AS builder
+# FROM $BUILDER_BASE_IMAGE AS builder
 
 # Install packages needed to fetch tools
 RUN apk add --no-cache bash curl wget tar openssl jq unzip coreutils dos2unix
@@ -17,40 +22,45 @@ RUN openssl s_client -showcerts  -connect schemastore.azurewebsites.net:443 2>&1
   && update-ca-certificates
 
 # helm
+ARG HELM_RELEASE=v3.4.0
 ADD https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 /usr/local/bin/get_helm.sh
 RUN chmod +x /usr/local/bin/get_helm.sh
-RUN ./usr/local/bin/get_helm.sh
+RUN ./usr/local/bin/get_helm.sh --version $HELM_RELEASE && helm version
 
 # kubectl (aws vended)
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
-RUN curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl
+ARG KUBECTL_RELEASE=https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl
+RUN curl -o kubectl $KUBECTL_RELEASE
 RUN chmod +x ./kubectl
-RUN mv ./kubectl /usr/local/bin/kubectl
+RUN mv ./kubectl /usr/local/bin/kubectl && kubectl version --client
 
 # eksctl
 # https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
-RUN curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-RUN mv /tmp/eksctl /usr/local/bin
+# ARG EKSCTL_RELEASE=hhttps://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz
+ARG EKSCTL_RELEASE=https://github.com/weaveworks/eksctl/releases/download/0.34.0/eksctl_Linux_amd64.tar.gz
+RUN curl --silent --location "${EKSCTL_RELEASE}" | tar xz -C /tmp
+RUN mv /tmp/eksctl /usr/local/bin && eksctl version
 
 # EKS-vended aws-iam-authenticator
 RUN curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator
 RUN chmod +x ./aws-iam-authenticator
-RUN mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
+RUN mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator && aws-iam-authenticator version
 
 # terragrunt
-ARG TERRAGRUNT_RELEASE=
+ARG TERRAGRUNT_RELEASE=v0.26.7
 COPY ./scripts/get_terragrunt.sh /usr/local/bin/get_terragrunt.sh
 RUN dos2unix /usr/local/bin/get_terragrunt.sh \
     && chmod +x /usr/local/bin/get_terragrunt.sh \
-    && ./usr/local/bin/get_terragrunt.sh
+    && ./usr/local/bin/get_terragrunt.sh \
+    && terragrunt --version
 
 # hclq (jq for hcl)
 # https://hclq.sh/
-RUN curl -sSLo install.sh https://install.hclq.sh
-RUN sh install.sh
+# RUN curl -sSLo install.sh https://install.hclq.sh
+# RUN sh install.sh
 
 ## Final Stage
-FROM hashicorp/terraform:latest AS final
+FROM $BASE_REGISTRY/$BASE_IMAGE AS final
 
 # Copy over certs from build stage and trust for the tools
 COPY --from=builder /usr/local/share/ca-certificates /usr/local/share/ca-certificates
@@ -60,7 +70,8 @@ ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 # QoL and automation tooling
 RUN apk add --no-cache \
   groff jq bash coreutils binutils curl wget unzip tar dos2unix \
-  ansible yarn nodejs
+  ansible nodejs npm \
+  && ansible --version && node --version && npm --version
 
 # helm
 COPY --from=builder /usr/local/bin/helm /usr/local/bin/helm
@@ -85,8 +96,8 @@ COPY --from=builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
 RUN chmod +x /usr/local/bin/terragrunt
 
 # hclq (jq for hcl)
-COPY --from=builder /usr/local/bin/hclq /usr/local/bin/hclq
-RUN chmod +x /usr/local/bin/hclq
+# COPY --from=builder /usr/local/bin/hclq /usr/local/bin/hclq
+# RUN chmod +x /usr/local/bin/hclq
 
 # aws-cli 2 (also needs glibc on alpine)
 # https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
