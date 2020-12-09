@@ -30,7 +30,7 @@ RUN ./usr/local/bin/get_helm.sh --version $HELM_RELEASE && helm version
 # kubectl (aws vended)
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 ARG KUBECTL_RELEASE=https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl
-RUN curl -o kubectl $KUBECTL_RELEASE
+RUN curl --silent -o kubectl $KUBECTL_RELEASE
 RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin/kubectl && kubectl version --client
 
@@ -42,7 +42,7 @@ RUN curl --silent --location "${EKSCTL_RELEASE}" | tar xz -C /tmp
 RUN mv /tmp/eksctl /usr/local/bin && eksctl version
 
 # EKS-vended aws-iam-authenticator
-RUN curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator
+RUN curl --silent -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator
 RUN chmod +x ./aws-iam-authenticator
 RUN mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator && aws-iam-authenticator version
 
@@ -56,8 +56,8 @@ RUN dos2unix /usr/local/bin/get_terragrunt.sh \
 
 # hclq (jq for hcl)
 # https://hclq.sh/
-# RUN curl -sSLo install.sh https://install.hclq.sh
-# RUN sh install.sh
+RUN curl -sSLo install.sh https://install.hclq.sh
+RUN sh install.sh
 
 ## Final Stage
 FROM $BASE_REGISTRY/$BASE_IMAGE AS final
@@ -96,8 +96,8 @@ COPY --from=builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
 RUN chmod +x /usr/local/bin/terragrunt
 
 # hclq (jq for hcl)
-# COPY --from=builder /usr/local/bin/hclq /usr/local/bin/hclq
-# RUN chmod +x /usr/local/bin/hclq
+COPY --from=builder /usr/local/bin/hclq /usr/local/bin/hclq
+RUN chmod +x /usr/local/bin/hclq
 
 # aws-cli 2 (also needs glibc on alpine)
 # https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
@@ -110,7 +110,7 @@ RUN apk --no-cache add \
         glibc-${GLIBC_VER}.apk \
         glibc-bin-${GLIBC_VER}.apk \
     && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
-    && unzip awscliv2.zip \
+    && unzip -q awscliv2.zip \
     && aws/install \
     && rm -rf \
         awscliv2.zip \
