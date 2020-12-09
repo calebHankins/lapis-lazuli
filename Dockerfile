@@ -56,8 +56,8 @@ RUN dos2unix /usr/local/bin/get_terragrunt.sh \
 
 # hclq (jq for hcl)
 # https://hclq.sh/
-RUN curl -sSLo install.sh https://install.hclq.sh
-RUN sh install.sh
+# RUN curl -sSLo install.sh https://install.hclq.sh
+# RUN sh install.sh
 
 ## Final Stage
 FROM $BASE_REGISTRY/$BASE_IMAGE AS final
@@ -96,8 +96,8 @@ COPY --from=builder /usr/local/bin/terragrunt /usr/local/bin/terragrunt
 RUN chmod +x /usr/local/bin/terragrunt
 
 # hclq (jq for hcl)
-COPY --from=builder /usr/local/bin/hclq /usr/local/bin/hclq
-RUN chmod +x /usr/local/bin/hclq
+# COPY --from=builder /usr/local/bin/hclq /usr/local/bin/hclq
+# RUN chmod +x /usr/local/bin/hclq
 
 # aws-cli 2 (also needs glibc on alpine)
 # https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
