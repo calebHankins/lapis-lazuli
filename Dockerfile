@@ -2,7 +2,7 @@
 ARG BUILDER_BASE_REGISTRY=docker.io
 ARG BUILDER_BASE_IMAGE=alpine:latest
 ARG BASE_REGISTRY=docker.io
-ARG BASE_IMAGE=hashicorp/terraform:0.13.5
+ARG BASE_IMAGE=hashicorp/terraform:0.13.6
 FROM $BUILDER_BASE_REGISTRY/$BUILDER_BASE_IMAGE AS builder
 # FROM $BUILDER_BASE_IMAGE AS builder
 
@@ -22,14 +22,14 @@ RUN openssl s_client -showcerts  -connect schemastore.azurewebsites.net:443 2>&1
   && update-ca-certificates
 
 # helm
-ARG HELM_RELEASE=v3.4.0
+ARG HELM_RELEASE=v3.5.2
 ADD https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 /usr/local/bin/get_helm.sh
 RUN chmod +x /usr/local/bin/get_helm.sh
 RUN ./usr/local/bin/get_helm.sh --version $HELM_RELEASE && helm version
 
 # kubectl (aws vended)
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
-ARG KUBECTL_RELEASE=https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl
+ARG KUBECTL_RELEASE=https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
 RUN curl --silent -o kubectl $KUBECTL_RELEASE
 RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin/kubectl && kubectl version --client
@@ -37,17 +37,17 @@ RUN mv ./kubectl /usr/local/bin/kubectl && kubectl version --client
 # eksctl
 # https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
 # ARG EKSCTL_RELEASE=hhttps://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz
-ARG EKSCTL_RELEASE=https://github.com/weaveworks/eksctl/releases/download/0.34.0/eksctl_Linux_amd64.tar.gz
+ARG EKSCTL_RELEASE=https://github.com/weaveworks/eksctl/releases/download/0.39.0/eksctl_Linux_amd64.tar.gz
 RUN curl --silent --location "${EKSCTL_RELEASE}" | tar xz -C /tmp
 RUN mv /tmp/eksctl /usr/local/bin && eksctl version
 
 # EKS-vended aws-iam-authenticator
-RUN curl --silent -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator
+RUN curl --silent -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/aws-iam-authenticator
 RUN chmod +x ./aws-iam-authenticator
 RUN mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator && aws-iam-authenticator version
 
 # terragrunt
-ARG TERRAGRUNT_RELEASE=v0.26.7
+ARG TERRAGRUNT_RELEASE=v0.28.7
 COPY ./scripts/get_terragrunt.sh /usr/local/bin/get_terragrunt.sh
 RUN dos2unix /usr/local/bin/get_terragrunt.sh \
     && chmod +x /usr/local/bin/get_terragrunt.sh \
