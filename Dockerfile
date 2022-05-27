@@ -29,7 +29,7 @@ RUN ./usr/local/bin/get_helm.sh --version $HELM_RELEASE && helm version
 
 # kubectl (aws vended)
 # https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
-ARG KUBECTL_RELEASE=https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+ARG KUBECTL_RELEASE=https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
 RUN curl --silent -o kubectl $KUBECTL_RELEASE
 RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin/kubectl && kubectl version --client
@@ -37,12 +37,13 @@ RUN mv ./kubectl /usr/local/bin/kubectl && kubectl version --client
 # eksctl
 # https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
 # ARG EKSCTL_RELEASE=hhttps://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz
-ARG EKSCTL_RELEASE=https://github.com/weaveworks/eksctl/releases/download/0.39.0/eksctl_Linux_amd64.tar.gz
+ARG EKSCTL_RELEASE=https://github.com/weaveworks/eksctl/releases/download/v0.99.0/eksctl_Linux_amd64.tar.gz
 RUN curl --silent --location "${EKSCTL_RELEASE}" | tar xz -C /tmp
 RUN mv /tmp/eksctl /usr/local/bin && eksctl version
 
 # EKS-vended aws-iam-authenticator
-RUN curl --silent -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/aws-iam-authenticator
+ARG AWS_IAM_AUTHENTICATOR_RELEASE=https://s3.us-west-2.amazonaws.com/amazon-eks/1.21.2/2021-07-05/bin/linux/amd64/aws-iam-authenticator
+RUN curl --silent -o aws-iam-authenticator "${AWS_IAM_AUTHENTICATOR_RELEASE}"
 RUN chmod +x ./aws-iam-authenticator
 RUN mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator && aws-iam-authenticator version
 
