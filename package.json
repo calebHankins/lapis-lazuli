@@ -12,7 +12,7 @@
     "issuePattern": "[A-Z]+-\\d+",
     "compareUrl": "https://github.com/calebHankins/lapis-lazuli/compare/{from}...{to}",
     "commitUrl": "https://github.com/calebHankins/lapis-lazuli/commit/{id}",
-    "unreleased": true,
+    "unreleased": false,
     "ignoreCommitPattern": "^(Merge.*|Pull request.*|\\[.*\\].* sp$)",
     "commitLimit": false
   },
