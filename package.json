@@ -1,20 +1,20 @@
 {
   "name": "lapis-lazuli",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Cloud infrastructure and kubernetes management image",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/calebHankins/lapis-lazuli.git"
+    "type": "git",
+    "url": "https://github.com/calebHankins/lapis-lazuli.git"
   },
   "scripts": {
-      "release": "npx release-it",
-      "release:patch": "npx release-it patch",
-      "release:minor": "npx release-it minor",
-      "release:major": "npx release-it major"
+    "release": "npx release-it",
+    "release:patch": "npx release-it patch",
+    "release:minor": "npx release-it minor",
+    "release:major": "npx release-it major"
   },
   "author": "Caleb 'chanki' Hankins",
   "license": "Apache-2.0",
   "devDependencies": {
-      "release-it": "^15.6.0"
+    "release-it": "^15.6.0"
   }
 }
