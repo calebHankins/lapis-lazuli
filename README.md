@@ -1,7 +1,7 @@
 # lapis-lazuli
 
-[![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/calebhankins/lapis-lazuli.svg?style=flat-square)](https://hub.docker.com/r/calebhankins/lapis-lazuli/)
-[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/calebhankins/lapis-lazuli.svg?style=flat-square)](https://hub.docker.com/r/calebhankins/lapis-lazuli/)
+[![GitHub Actions](https://github.com/calebHankins/lapis-lazuli/workflows/.github/workflows/build-docker-images.yaml/badge.svg)](https://github.com/calebHankins/lapis-lazuli/actions)
+[![Version](https://img.shields.io/github/package-json/v/calebHankins/lapis-lazuli/master)](https://github.com/calebHankins/lapis-lazuli/blob/master/package.json)
 
 This project aims to provide a thin wrapping container around [cloud infrastructure](https://aws.amazon.com/what-is-cloud-computing/) and [kubernetes](https://kubernetes.io/) management tools.
 
