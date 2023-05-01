@@ -128,7 +128,9 @@ RUN apk upgrade \
 
 # Mark all directories as safe for git for backwards compatibility with builds prior to Git v2.35.2
 ARG GIT_GLOBAL_SAFE_DIRECTORY=true
-RUN git config --global --add safe.directory '*' && git config --global --list --show-origin | cat
+RUN if [ "${GIT_GLOBAL_SAFE_DIRECTORY}ZZ" = "trueZZ" ]; then \
+      git config --global --add safe.directory '*' && git config --global --list --show-origin | cat; \
+    fi;
 
 # Add git lfs support
 RUN apk add git-lfs
