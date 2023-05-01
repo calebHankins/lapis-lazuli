@@ -101,9 +101,11 @@ RUN chmod +x /usr/local/bin/terragrunt
 # RUN chmod +x /usr/local/bin/hclq
 
 # aws-cli 2 (also needs glibc on alpine)
-# https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
+# @see: https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
+# @see: https://gist.github.com/so0k/3f0546be5f06431a55a0a90ac9c25da8 for alpine curl issues
 ARG GLIBC_VER=2.31-r0
-RUN apk --no-cache add \
+RUN apk upgrade \
+    && apk --no-cache add \
     && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
