@@ -126,5 +126,12 @@ RUN apk upgrade \
     && rm -rf /var/cache/apk/* \
     && aws --version
 
+# Add git lfs support
+RUN apk add git-lfs
+
+# Add gh cli
+RUN echo '@community http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
+    && apk add github-cli@community
+
 # Entrypoint override, setting to shell since this thing has turned into more of a tool grab bag
 ENTRYPOINT [ "bash" ]
