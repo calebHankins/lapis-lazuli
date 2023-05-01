@@ -6,6 +6,16 @@
     "type": "git",
     "url": "https://github.com/calebHankins/lapis-lazuli.git"
   },
+  "auto-changelog": {
+    "template": "templates/compact.hbs",
+    "issueUrl": "https://github.com/calebHankins/lapis-lazuli/issues/{id}",
+    "issuePattern": "[A-Z]+-\\d+",
+    "compareUrl": "https://github.com/calebHankins/lapis-lazuli/compare/{from}...{to}",
+    "commitUrl": "https://github.com/calebHankins/lapis-lazuli/commit/{id}",
+    "unreleased": false,
+    "ignoreCommitPattern": "^(Merge.*|Pull request.*|\\[.*\\].* sp$)",
+    "commitLimit": false
+  },
   "scripts": {
     "release": "npx release-it",
     "release:patch": "npx release-it patch",
