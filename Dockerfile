@@ -126,5 +126,18 @@ RUN apk upgrade \
     && rm -rf /var/cache/apk/* \
     && aws --version
 
+# Mark all directories as safe for git for backwards compatibility with builds prior to Git v2.35.2
+ARG GIT_GLOBAL_SAFE_DIRECTORY=true
+RUN if [ "${GIT_GLOBAL_SAFE_DIRECTORY}ZZ" = "trueZZ" ]; then \
+      git config --global --add safe.directory '*' && git config --global --list --show-origin | cat; \
+    fi;
+
+# Add git lfs support
+RUN apk add git-lfs
+
+# Add gh cli
+RUN echo '@community http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
+    && apk add github-cli@community
+
 # Entrypoint override, setting to shell since this thing has turned into more of a tool grab bag
 ENTRYPOINT [ "bash" ]

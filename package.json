@@ -1,10 +1,20 @@
 {
   "name": "lapis-lazuli",
-  "version": "0.7.3",
+  "version": "0.8.1",
   "description": "Cloud infrastructure and kubernetes management image",
   "repository": {
     "type": "git",
     "url": "https://github.com/calebHankins/lapis-lazuli.git"
+  },
+  "auto-changelog": {
+    "template": "templates/compact.hbs",
+    "issueUrl": "https://github.com/calebHankins/lapis-lazuli/issues/{id}",
+    "issuePattern": "[A-Z]+-\\d+",
+    "compareUrl": "https://github.com/calebHankins/lapis-lazuli/compare/{from}...{to}",
+    "commitUrl": "https://github.com/calebHankins/lapis-lazuli/commit/{id}",
+    "unreleased": false,
+    "ignoreCommitPattern": "^(Merge.*|Pull request.*|\\[.*\\].* sp$)",
+    "commitLimit": false
   },
   "scripts": {
     "release": "npx release-it",
@@ -15,6 +25,7 @@
   "author": "Caleb 'chanki' Hankins",
   "license": "Apache-2.0",
   "devDependencies": {
+    "auto-changelog": "^2.4.0",
     "release-it": "^15.6.0"
   }
 }
