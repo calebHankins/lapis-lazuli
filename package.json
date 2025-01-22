@@ -1,6 +1,6 @@
 {
   "name": "lapis-lazuli",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Cloud infrastructure and kubernetes management image",
   "repository": {
     "type": "git",
