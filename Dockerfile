@@ -4,6 +4,7 @@ ARG BUILDER_BASE_IMAGE=alpine:latest
 ARG BASE_REGISTRY=docker.io
 ARG BASE_IMAGE=hashicorp/terraform:1.1.2
 FROM $BUILDER_BASE_REGISTRY/$BUILDER_BASE_IMAGE AS builder
+
 # FROM $BUILDER_BASE_IMAGE AS builder
 
 # Install packages needed to fetch tools
