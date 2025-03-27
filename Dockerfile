@@ -22,7 +22,7 @@ RUN openssl s_client -showcerts  -connect schemastore.azurewebsites.net:443 2>&1
   && update-ca-certificates
 
 # helm
-ARG HELM_RELEASE=v3.5.2
+ARG HELM_RELEASE=v3.13.3
 ADD https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 /usr/local/bin/get_helm.sh
 RUN chmod +x /usr/local/bin/get_helm.sh
 RUN ./usr/local/bin/get_helm.sh --version $HELM_RELEASE && helm version
